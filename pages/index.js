@@ -4,7 +4,7 @@ import Dashboard from '../components/dashboard'
 import DateTime from '../components/widgets/datetime'
 import PageSpeedInsightsScore from '../components/widgets/pagespeed-insights/score'
 import PageSpeedInsightsStats from '../components/widgets/pagespeed-insights/stats'
-import JiraIssueCount from '../components/widgets/jira/issue-count'
+// import JiraIssueCount from '../components/widgets/jira/issue-count'
 import GitHubIssueCount from '../components/widgets/github/issue-count'
 import GitHubEmojiCount from '../components/widgets/github/emoji-count'
 // import SonarQube from '../components/widgets/sonarqube'
@@ -25,11 +25,11 @@ export default () => (
 
 		<PageSpeedInsightsStats url="https://liferay.com" />
 
-		<JiraIssueCount
+		{/* <JiraIssueCount
 			title="JIRA Open Bugs"
 			url="https://crossorigin.me/https://jira.atlassian.com"
 			query='type=Bug AND project="Bitbucket Server" AND resolution=Unresolved ORDER BY priority DESC,created DESC'
-		/>
+		/> */}
 
 		<GitHubIssueCount owner="node-gh" repository="gh" />
 
