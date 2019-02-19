@@ -2,7 +2,7 @@ import { Component } from 'react'
 import client from './client'
 import { object, string, number } from 'yup'
 import Widget from '../../widget'
-import Counter from '../../counter'
+//import Counter from '../../counter'
 import { basicAuthHeader } from '../../../lib/auth'
 
 const schema = object().shape({
@@ -20,7 +20,7 @@ export default class GitHubEmojiCount extends Component {
 	}
 
 	state = {
-		count: 0,
+		bodyText: "",
 		error: false,
 		loading: true,
 	}
@@ -48,15 +48,17 @@ export default class GitHubEmojiCount extends Component {
 
 		try {
 			const res = await client.request(`
-        {
-          search(first: 100, type: ISSUE, query: "user:node-gh state:open") {
-            issueCount
-          }
-        }
-      `)
+			query {
+			  repository(owner:"johnnyduong", name:"dashboard") {
+				pullRequest(number: 1) {
+				  bodyHTML
+				}
+			  }
+			}
+		  `)
 
 			this.setState({
-				count: res.search.issueCount,
+				bodyText: res.data.repository.pullRequest.bodyHTML,
 				error: false,
 				loading: false,
 			})
@@ -71,11 +73,11 @@ export default class GitHubEmojiCount extends Component {
 	}
 
 	render() {
-		const { count, error, loading } = this.state
+		const { bodyText, error, loading } = this.state
 		const { title } = this.props
 		return (
 			<Widget title={title} loading={loading} error={error}>
-				<Counter value={count} />
+				{ bodyText }
 			</Widget>
 		)
 	}
