@@ -2,7 +2,6 @@ import { Component } from 'react'
 import client from './client'
 import { object, string, number } from 'yup'
 import Widget from '../../widget'
-//import Counter from '../../counter'
 import { basicAuthHeader } from '../../../lib/auth'
 
 const schema = object().shape({
@@ -20,7 +19,7 @@ export default class GitHubEmojiCount extends Component {
 	}
 
 	state = {
-		bodyText: "",
+		bodyText: '',
 		error: false,
 		loading: true,
 	}
@@ -51,14 +50,14 @@ export default class GitHubEmojiCount extends Component {
 			query {
 			  repository(owner:"johnnyduong", name:"dashboard") {
 				pullRequest(number: 1) {
-				  bodyHTML
+				  body
 				}
 			  }
 			}
-		  `)
+          `)
 
 			this.setState({
-				bodyText: res.data.repository.pullRequest.bodyHTML,
+				bodyText: res.repository.pullRequest.body,
 				error: false,
 				loading: false,
 			})
@@ -77,7 +76,21 @@ export default class GitHubEmojiCount extends Component {
 		const { title } = this.props
 		return (
 			<Widget title={title} loading={loading} error={error}>
-				{ bodyText }
+				<div>
+					{' '}
+					<span role="img" aria-label="thumbs up">
+						👍:
+					</span>{' '}
+					847
+				</div>
+
+				<div>
+					{' '}
+					<span role="img" aria-label="thumbs down">
+						👎:
+					</span>{' '}
+					847
+				</div>
 			</Widget>
 		)
 	}
