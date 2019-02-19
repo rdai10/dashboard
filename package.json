@@ -1,7 +1,7 @@
 {
   "name": "dashboard",
   "version": "1.0.0",
-  "description": "Your Team Dashboard",
+  "description": "Liferay IS Dashboard built on top of https://github.com/protoEvangelion/dashboard",
   "main": "pages/index.js",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danielbayerlein/dashboard.git"
+    "url": "git+https://github.com/protoEvangelion/dashboard.git"
   },
   "keywords": [
     "tv",
@@ -22,9 +22,9 @@
   "author": "Daniel Bayerlein",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/danielbayerlein/dashboard/issues"
+    "url": "https://github.com/protoEvangelion/dashboard/issues"
   },
-  "homepage": "https://github.com/danielbayerlein/dashboard#readme",
+  "homepage": "https://github.com/protoEvangelion/dashboard#readme",
   "dependencies": {
     "babel-plugin-styled-components": "^1.10.0",
     "dotenv-webpack": "^1.7.0",

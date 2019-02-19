@@ -14,16 +14,16 @@ import ElasticsearchHitCount from '../components/widgets/elasticsearch/hit-count
 import GitHubIssueCount from '../components/widgets/github/issue-count'
 
 // Theme
-import lightTheme from '../styles/light-theme'
-// import darkTheme from '../styles/dark-theme'
+// import lightTheme from '../styles/light-theme'
+import darkTheme from '../styles/dark-theme'
 
 export default () => (
-  <Dashboard theme={lightTheme}>
+  <Dashboard theme={darkTheme}>
     <DateTime />
 
-    <PageSpeedInsightsScore url='https://github.com' />
+    <PageSpeedInsightsScore url='https://liferay.com' />
 
-    <PageSpeedInsightsStats url='https://github.com' />
+    <PageSpeedInsightsStats url='https://liferay.com' />
 
     <JiraIssueCount
       title='JIRA Open Bugs'
