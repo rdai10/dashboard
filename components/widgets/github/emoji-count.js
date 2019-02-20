@@ -47,13 +47,11 @@ export default class GitHubEmojiCount extends Component {
 		let dedupMap = new Map()
 
 		array.forEach(emojiName => {
-			if (dedupMap.has(emojiName))
-			{
-				let count = dedupMap.get(emojiName)
+			if (dedupMap.has(emojiName)) {
+				const count = dedupMap.get(emojiName)
 
 				dedupMap.set(emojiName, count + 1)
-			}
-			else {
+			} else {
 				dedupMap.set(emojiName, 1)
 			}
 		})
@@ -62,7 +60,10 @@ export default class GitHubEmojiCount extends Component {
 	}
 
 	parseEmojis(array) {
-		const bodyString = array.map( item => item.node.bodyHTML).map( string => string.match(/\/unicode\/([\d\w]+\.png)/g)).flat()
+		const bodyString = array
+			.map(item => item.node.bodyHTML)
+			.map(string => string.match(/\/unicode\/([\d\w]+\.png)/g))
+			.flat()
 
 		return this.filterDuplicates(bodyString)
 	}
@@ -73,12 +74,11 @@ export default class GitHubEmojiCount extends Component {
 		let prBodyArray = []
 
 		for (const [key, value] of preprocessedPrBody) {
-			prBodyArray.push({name:`${EMOJI_URL}${key}`, count:`${value}`})
+			prBodyArray.push({ name: `${EMOJI_URL}${key}`, count: `${value}` })
 		}
 
 		return prBodyArray
 	}
-
 
 	async fetchInformation() {
 		const { authKey, owner, repository } = this.props
@@ -98,9 +98,11 @@ export default class GitHubEmojiCount extends Component {
 				}
 			  }
 			}
-          `)
+        `)
 
-			const prBody = this.processPullRequestBody(res.repository.pullRequests.edges)
+			const prBody = this.processPullRequestBody(
+				res.repository.pullRequests.edges
+			)
 
 			this.setState({
 				prBody: prBody,
@@ -122,9 +124,13 @@ export default class GitHubEmojiCount extends Component {
 		const { title } = this.props
 		return (
 			<Widget title={title} loading={loading} error={error}>
-				{
-					prBody && prBody.map((body, index)  => (<div key={index}><img src={body.name} width="24px" height="24px" /> : {body.count}</div>))
-				}
+				{prBody &&
+					prBody.map((body, index) => (
+						<div key={index}>
+							<img src={body.name} width="24px" height="24px" /> :{' '}
+							{body.count}
+						</div>
+					))}
 			</Widget>
 		)
 	}
