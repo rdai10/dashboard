@@ -47,12 +47,14 @@ export default class GitHubEmojiCount extends Component {
 		let dedupMap = new Map()
 
 		array.forEach(emojiName => {
-			if (dedupMap.has(emojiName)) {
-				const count = dedupMap.get(emojiName)
+			if (emojiName) {
+				if (dedupMap.has(emojiName)) {
+					const count = dedupMap.get(emojiName)
 
-				dedupMap.set(emojiName, count + 1)
-			} else {
-				dedupMap.set(emojiName, 1)
+					dedupMap.set(emojiName, count + 1)
+				} else {
+					dedupMap.set(emojiName, 1)
+				}
 			}
 		})
 
@@ -98,7 +100,7 @@ export default class GitHubEmojiCount extends Component {
 				}
 			  }
 			}
-        `)
+		`)
 
 			const prBody = this.processPullRequestBody(
 				res.repository.pullRequests.edges
@@ -122,6 +124,7 @@ export default class GitHubEmojiCount extends Component {
 	render() {
 		const { prBody, error, loading } = this.state
 		const { title } = this.props
+
 		return (
 			<Widget title={title} loading={loading} error={error}>
 				{prBody &&
@@ -131,6 +134,10 @@ export default class GitHubEmojiCount extends Component {
 							{body.count}
 						</div>
 					))}
+
+				{!prBody.length && (
+					<div>No emoji was used in the last 10 pull requests 😢</div>
+				)}
 			</Widget>
 		)
 	}
