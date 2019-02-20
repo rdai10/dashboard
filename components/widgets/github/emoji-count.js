@@ -12,6 +12,8 @@ const schema = object().shape({
 	authKey: string(),
 })
 
+const EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji'
+
 export default class GitHubEmojiCount extends Component {
 	static defaultProps = {
 		interval: 1000 * 60 * 5,
@@ -19,7 +21,7 @@ export default class GitHubEmojiCount extends Component {
 	}
 
 	state = {
-		bodyText: '',
+		prBody: [],
 		error: false,
 		loading: true,
 	}
@@ -41,6 +43,43 @@ export default class GitHubEmojiCount extends Component {
 		clearTimeout(this.timeout)
 	}
 
+	filterDuplicates(array) {
+		let dedupMap = new Map()
+
+		array.forEach(emojiName => {
+			if (dedupMap.has(emojiName))
+			{
+				let count = dedupMap.get(emojiName)
+
+				dedupMap.set(emojiName, count + 1)
+			}
+			else {
+				dedupMap.set(emojiName, 1)
+			}
+		})
+
+		return dedupMap
+	}
+
+	parseEmojis(array) {
+		const bodyString = array.map( item => item.node.bodyHTML).map( string => string.match(/\/unicode\/([\d\w]+\.png)/g)).flat()
+
+		return this.filterDuplicates(bodyString)
+	}
+
+	processPullRequestBody(array) {
+		const preprocessedPrBody = this.parseEmojis(array)
+
+		let prBodyArray = []
+
+		for (const [key, value] of preprocessedPrBody) {
+			prBodyArray.push({name:`${EMOJI_URL}${key}`, count:`${value}`})
+		}
+
+		return prBodyArray
+	}
+
+
 	async fetchInformation() {
 		const { authKey, owner, repository } = this.props
 		const opts = authKey ? { headers: basicAuthHeader(authKey) } : {}
@@ -49,15 +88,22 @@ export default class GitHubEmojiCount extends Component {
 			const res = await client.request(`
 			query {
 			  repository(owner:"johnnyduong", name:"dashboard") {
-				pullRequest(number: 1) {
-				  body
+				pullRequests(last:10) {
+				  totalCount
+				  edges{
+					node {
+					  bodyHTML
+					}
+				  }
 				}
 			  }
 			}
           `)
 
+			const prBody = this.processPullRequestBody(res.repository.pullRequests.edges)
+
 			this.setState({
-				bodyText: res.repository.pullRequest.body,
+				prBody: prBody,
 				error: false,
 				loading: false,
 			})
@@ -72,25 +118,13 @@ export default class GitHubEmojiCount extends Component {
 	}
 
 	render() {
-		const { bodyText, error, loading } = this.state
+		const { prBody, error, loading } = this.state
 		const { title } = this.props
 		return (
 			<Widget title={title} loading={loading} error={error}>
-				<div>
-					{' '}
-					<span role="img" aria-label="thumbs up">
-						👍:
-					</span>{' '}
-					847
-				</div>
-
-				<div>
-					{' '}
-					<span role="img" aria-label="thumbs down">
-						👎:
-					</span>{' '}
-					847
-				</div>
+				{
+					prBody && prBody.map((body, index)  => (<div key={index}><img src={body.name} width="24px" height="24px" /> : {body.count}</div>))
+				}
 			</Widget>
 		)
 	}
